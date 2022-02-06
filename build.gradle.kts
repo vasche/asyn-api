@@ -53,6 +53,8 @@ openApiGenerate {
 	inputSpec.set("$rootDir/src/main/resources/openapi.yaml")
 	modelPackage.set("com.example.asynapi.model")
 	apiPackage.set("com.example.asynapi.api")
+	invokerPackage.set("com.example.asynapi.invoker")
+	packageName.set("com.example.asynapi")
 	typeMappings.put("OffsetDateTime", "LocalDateTime")
 	importMappings.put("java.time.OffsetDateTime","java.time.LocalDateTime")
 
@@ -62,8 +64,16 @@ openApiGenerate {
 	generateModelTests.set(false)
 	generateModelDocumentation.set(false)
 
-	configOptions.set(mapOf ("library" to "spring-boot", "documentationProvider" to "none"))
-    globalProperties.set(mapOf("modelDocs" to "false", "apis" to "false", "supportingFiles" to "false"))
+	configOptions.set(mapOf (
+		"library" to "spring-boot",
+		"documentationProvider" to "none"))
+    globalProperties.set(mapOf(
+		"modelDocs" to "false",
+		"apiDocs" to "false",
+		"models" to "",
+		"modelDocs" to "false",
+		"apis" to "false",
+		"supportingFiles" to "false"))
 }
 
 tasks.named<Test>("test") {

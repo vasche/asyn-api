@@ -1,4 +1,9 @@
 api:
   baseurl: https://api.covid19api.com
+  user: corona
+  password:
+  access_token:
+  default_path: /
+  all_path: /all
   summary_path: /summary
   countries_path: /countries

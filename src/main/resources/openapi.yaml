@@ -6,10 +6,26 @@ info:
 servers:
   - url: https://api.covid19api.com
 paths:
+  /:
+    get:
+      tags: [ Default ]
+      summary: 'index'
+      description: 'get routes description'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
   /all:
     get:
       tags: [ all ]
       summary: 'Get All Data'
+      security:
+        - basicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/xToken'
       description: 'Returns all data in the system. Warning: this request returns 8MB+ and takes 5+ seconds'
       responses:
         '200':
@@ -18,10 +34,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/All'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /summary:
     get:
       tags: [ summary ]
       summary: get summary
+      security:
+        - basicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/xToken'
       responses:
         '200':
           description: OK
@@ -29,11 +55,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Summary'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /countries:
     get:
       tags: [ countries ]
       summary: Get List Of Countries
       description: 'Returns all countries and associated provinces. The country_slug variable is used for country specific data'
+      security:
+        - basicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/xToken'
       responses:
         '200':
           description: OK
@@ -41,15 +77,169 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Countries'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /dayone/country/{country}/status/{status}:
+    get:
+      tags: [ dayone ]
+      summary: get dayone stats
+      security:
+        - basicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/xToken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CountryItem'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /dayone/country/{country}:
+    get:
+      tags: [ dayone ]
+      summary: get dayone all status
+      security:
+        - basicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/xToken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CountryItem'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /dayone/country/{country}/status/{status}/live:
+    get:
+      tags: [ dayone ]
+      summary: get dayone status live
+      security:
+        - basicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/xToken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CountryItem'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /total/dayone/country/{country}/status/{status}:
+    get:
+      tags: [ dayone ]
+      summary: get total dayone status
+      security:
+        - basicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/xToken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CountryItem'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /total/dayone/country/{country}:
+    get:
+      tags: [ dayone ]
+      summary: get total dayone all status
+      security:
+        - basicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/xToken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CountryItem'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /version:
+    get:
+      tags: [ version ]
+      summary: get version
+      parameters:
+        - $ref: '#/components/parameters/xToken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                {}
+              example: '0.0.33'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 security:
   - BasicAuth: []
 components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
   schemas:
     All:
+      properties:
+        {}
+    DefaultResponse:
       type: object
       properties:
-        allRoute:
-          $ref: '#/components/schemas/RouteDescription'
         countriesRoute:
           $ref: '#/components/schemas/RouteDescription'
         countryStatusDayOneLiveRoute:
@@ -114,9 +304,7 @@ components:
         Global:
           $ref: '#/components/schemas/Global'
         Countries:
-          type: array
-          items:
-            $ref: '#/components/schemas/SummaryCountries'
+          $ref: '#/components/schemas/SummaryCountries'
         Date:
           type: string
           format: date-time
@@ -155,7 +343,7 @@ components:
         Country:
           type: string
           example: Afghanistan
-        CountryCod:
+        CountryCode:
           type: string
           example: AF
         Slug:
@@ -181,7 +369,7 @@ components:
           example: 0
         Date:
           type: string
-          format: date
+          format: date-time
           example: 2022-02-05T19:21:18.595Z
         Premium:
           $ref: '#/components/schemas/Premium'
@@ -255,8 +443,93 @@ components:
         MaleSmokers:
           type: number
           example: 0
-
-
-
+    CountryItem:
+      type: object
+      properties:
+        ID:
+          type: string
+          example: 'f8e06673-adbe-4bd6-b06d-65cea13581b9'
+        Country:
+          type: string
+          example: 'South Africa'
+        CountryCode:
+          type: string
+          example: 'ZA'
+        Province:
+          type: string
+          example: ''
+        City:
+          type: string
+          example: ''
+        CityCode:
+          type: string
+          example: ''
+        Lat:
+          type: string
+          example: '-30.56'
+        Lon:
+          type: string
+          example: '22.94'
+        Cases:
+          type: number
+          format: int64
+          example: 1
+        Confirmed:
+          type: number
+          format: int64
+          example: 1
+        Deaths:
+          type: number
+          format: int64
+          example: 0
+        Recovered:
+          type: number
+          format: int64
+          example: 0
+        Active:
+          type: number
+          format: int64
+          example: 1
+        Status:
+          type: string
+          example: 'confirmed'
+        Date:
+          type: string
+          format: date-time
+          example: '2020-03-05T00:00:00Z'
+    Status:
+      type: string
+      enum:
+        - confirmed
+        - recovered
+        - deaths
+    ErrorResponse:
+      properties:
+        message:
+          type: string
+          example: Not Found
+  parameters:
+    country:
+        in: path
+        name: country
+        schema:
+          type: string
+        required: true
+        description: The country_slug variable is used for country specific data
+        example: south-africa
+    status:
+      in: path
+      name: status
+      schema:
+        $ref: '#/components/schemas/Status'
+      required: true
+      description: status
+      example: confirmed
+    xToken:
+        in: header
+        name: X-Access-Token
+        schema:
+          type: string
+        required: false
 
 
