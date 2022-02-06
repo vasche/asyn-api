@@ -21,10 +21,9 @@ public class CovidController {
     @GetMapping("/covid/summary")
     Summary getCovidSummary () {
         return covid19Service.getSummary();
-//        return "Ok";
     }
 
-    @GetMapping("/covid/")
+    @GetMapping("/covid")
     DefaultResponse getDefault () {
         return covid19Service.getDefault();
     }

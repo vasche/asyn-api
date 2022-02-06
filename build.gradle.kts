@@ -56,6 +56,7 @@ openApiGenerate {
 	invokerPackage.set("com.example.asynapi.invoker")
 	packageName.set("com.example.asynapi")
 	typeMappings.put("OffsetDateTime", "LocalDateTime")
+	typeMappings.put("Double", "BigDecimal")
 	importMappings.put("java.time.OffsetDateTime","java.time.LocalDateTime")
 
 	outputDir.set("$buildDir/generated")

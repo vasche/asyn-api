@@ -206,6 +206,109 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /country/{country}/status/{status}:
+    get:
+      tags: [ by country ]
+      summary: get data by country
+      security:
+        - basicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/from'
+        - $ref: '#/components/parameters/to'
+        - $ref: '#/components/parameters/xToken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CountryItem'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /country/{country}:
+    get:
+      tags: [ by country ]
+      summary: get data by country all status
+      security:
+        - basicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/from'
+        - $ref: '#/components/parameters/to'
+        - $ref: '#/components/parameters/xToken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CountryItem'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /country/{country}/status/{{status}}/live:
+    get:
+      tags: [ by country ]
+      summary: get data by country all status
+      security:
+        - basicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/from'
+        - $ref: '#/components/parameters/to'
+        - $ref: '#/components/parameters/xToken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CountryItem'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /world/total:
+    get:
+      tags: [ world ]
+      summary: ''
+      security:
+        - basicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/xToken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorldTotal'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /version:
     get:
       tags: [ version ]
@@ -497,6 +600,10 @@ components:
           type: string
           format: date-time
           example: '2020-03-05T00:00:00Z'
+        Timestamp:
+          type: string
+          format: date-time
+          example: '2020-07-11T01:00:00+01:00'
     Status:
       type: string
       enum:
@@ -508,6 +615,163 @@ components:
         message:
           type: string
           example: Not Found
+    WorldTotal:
+      type: object
+      properties:
+        TotalConfirmed:
+          type: number
+          format: int64
+          example: 392699526
+        TotalDeaths:
+          type: number
+          format: int64
+          example: 5730390
+        TotalRecovered:
+          type: number
+          format: int64
+          example: 0
+    PremiumSummary:
+      type: object
+      properties:
+        Message:
+          type: string
+          example: ''
+        Countries:
+          type: array
+          items:
+            $ref: '#/components/schemas/PremiumCountry'
+        Date:
+          type: string
+          format: date-time
+          example: 2020-09-13T13:52:57Z
+    PremiumCountry:
+      type: object
+      properties:
+        CountryISO:
+          type: string
+          example: 'AF'
+        Country:
+          type: string
+          example: 'Afghanistan'
+        Continent:
+          type: string
+          example: 'Asia'
+        Date:
+          type: string
+          format: date-time
+          example: '2020-09-13T00:00:00Z'
+        TotalCases:
+          type: number
+          example: 38641
+        NewCases:
+          type: number
+          example: 35
+        TotalDeaths:
+          type: number
+          example: 1420
+        NewDeaths:
+          type: number
+          example: 0
+        TotalCasesPerMillion:
+          type: number
+          format: double
+          example: 992.619
+        NewCasesPerMillion:
+          type: number
+          format: double
+          example: 0.899
+        TotalDeathsPerMillion:
+          type: number
+          format: double
+          example: 36.477
+        NewDeathsPerMillion:
+          type: number
+          format: double
+          example: 0.03
+        StringencyIndex:
+          type: number
+          format: double
+          example: 0
+        DailyIncidenceConfirmedCases:
+          type: number
+          format: double
+          example: 48.142857142857146
+        DailyIncidenceConfirmedDeaths:
+          type: number
+          format: double
+          example: 1.4285714285714286
+        DailyIncidenceConfirmedCasesPerMillion:
+          type: number
+          format: double
+          example: 1.2367142857142857
+        DailyIncidenceConfirmedDeathsPerMillion:
+          type: number
+          format: double
+          example: 0.036571428571428574
+        IncidenceRiskConfirmedPerHundredThousand:
+          type: number
+          format: double
+          example: 99.2619
+        IncidenceRiskDeathsPerHundredThousand:
+          type: number
+          format: double
+          example: 3.6476999999999995
+        IncidenceRiskNewConfirmedPerHundredThousand:
+          type: number
+          format: double
+          example: 0.08990000000000001
+        IncidenceRiskNewDeathsPerHundredThousand:
+          type: number
+          format: double
+          example: 0.003
+        CaseFatalityRatio:
+          type: number
+          format: double
+          example: 3.6748531352708267
+    PremiumTravelCountry:
+      type: object
+      properties:
+        Country:
+          $ref: '#/components/schemas/CountryItem'
+        Recommendation:
+          type: string
+          example: ''
+        Level:
+          $ref: '#/components/schemas/PremiumLevel'
+        Notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/PremiumNote'
+    PremiumNote:
+      type: object
+      properties:
+        CountryCode:
+          type: string
+          example: AU
+        Note:
+          type: string
+          example: 'The Australian international border remains closed to entry. Repatriation or anyone entering is subject to 14 day quarantine.'
+        Date:
+          type: string
+          format: date-time
+          example: 2020-07-01T01:00:00+01:00
+    PremiumLevel:
+      type: object
+      properties:
+        CountryCode:
+          type: string
+          example: AU
+        Level:
+          type: number
+          format: int64
+          example: 4
+        LevelDesc:
+          type: string
+          example: 'Level 4: Ban on all regions or total border closure'
+        Date:
+          type: string
+          format: date-time
+          example: 2020-07-01T01:00:00+01:00
   parameters:
     country:
         in: path
@@ -526,10 +790,27 @@ components:
       description: status
       example: confirmed
     xToken:
-        in: header
-        name: X-Access-Token
-        schema:
-          type: string
-        required: false
+      in: header
+      name: X-Access-Token
+      schema:
+        type: string
+      required: false
+    from:
+      in: query
+      name: from
+      schema:
+        type: string
+        format: date-time
+      required: false
+      example: 2020-03-01T00:00:00Z
+    to:
+      in: query
+      name: to
+      schema:
+        type: string
+        format: date-time
+      required: false
+      example: 2020-04-01T00:00:00Z
+
 
 
