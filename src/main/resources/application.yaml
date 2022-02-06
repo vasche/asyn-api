@@ -1,0 +1,4 @@
+api:
+  baseurl: https://api.covid19api.com
+  summary_path: /summary
+  countries_path: /countries

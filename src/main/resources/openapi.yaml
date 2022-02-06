@@ -1,0 +1,262 @@
+openapi: 3.0.3
+info:
+  title: Coronavirus COVID19 API
+  description: Coronavirus stats
+  version: 0.0.1
+servers:
+  - url: https://api.covid19api.com
+paths:
+  /all:
+    get:
+      tags: [ all ]
+      summary: 'Get All Data'
+      description: 'Returns all data in the system. Warning: this request returns 8MB+ and takes 5+ seconds'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/All'
+  /summary:
+    get:
+      tags: [ summary ]
+      summary: get summary
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Summary'
+  /countries:
+    get:
+      tags: [ countries ]
+      summary: Get List Of Countries
+      description: 'Returns all countries and associated provinces. The country_slug variable is used for country specific data'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Countries'
+security:
+  - BasicAuth: []
+components:
+  schemas:
+    All:
+      type: object
+      properties:
+        allRoute:
+          $ref: '#/components/schemas/RouteDescription'
+        countriesRoute:
+          $ref: '#/components/schemas/RouteDescription'
+        countryStatusDayOneLiveRoute:
+          $ref: '#/components/schemas/RouteDescription'
+        countryStatusDayOneRoute:
+          $ref: '#/components/schemas/RouteDescription'
+        countryStatusDayOneTotalRoute:
+          $ref: '#/components/schemas/RouteDescription'
+        countryStatusLiveRoute:
+          $ref: '#/components/schemas/RouteDescription'
+        countryStatusRoute:
+          $ref: '#/components/schemas/RouteDescription'
+        countryStatusTotalRoute:
+          $ref: '#/components/schemas/RouteDescription'
+        exportRoute:
+          $ref: '#/components/schemas/RouteDescription'
+        liveCountryStatusAfterDateRoute:
+          $ref: '#/components/schemas/RouteDescription'
+        liveCountryStatusRoute:
+          $ref: '#/components/schemas/RouteDescription'
+        summaryRoute:
+          $ref: '#/components/schemas/RouteDescription'
+        webhookRoute:
+          $ref: '#/components/schemas/RouteDescription'
+    RouteDescription:
+      type: object
+      properties:
+        Name:
+          type: string
+          example: 'Get All Data'
+        Description:
+          type: string
+          example: 'Returns all data in the system. Warning: this request returns 8MB+ and takes 5+ seconds'
+        Path:
+          type: string
+          example: '/all'
+    Countries:
+      type: array
+      items:
+        $ref: '#/components/schemas/Country'
+    Country:
+      type: object
+      properties:
+        Country:
+          type: string
+          example: Uruguay
+        Slug:
+          type: string
+          example: uruguay
+        ISO2:
+          type: string
+          example: UY
+    Summary:
+      type: object
+      properties:
+        ID:
+          type: string
+          example: '77e267ef-08d0-4aab-837a-57faaa1a0a88'
+        Message:
+          type: string
+          example: ''
+        Global:
+          $ref: '#/components/schemas/Global'
+        Countries:
+          type: array
+          items:
+            $ref: '#/components/schemas/SummaryCountries'
+        Date:
+          type: string
+          format: date-time
+          example: '2022-02-05T19:21:18.595Z'
+    Global:
+      type: object
+      properties:
+        NewConfirmed:
+          type: number
+          example: 100282
+        TotalConfirmed:
+          type: number
+          example: 1162857
+        NewDeaths:
+          type: number
+          example: 5658
+        TotalDeaths:
+          type: number
+          example: 63263
+        NewRecovered:
+          type: number
+          example: 15405
+        TotalRecovered:
+          type: number
+          example: 230845
+    SummaryCountries:
+      type: array
+      items:
+        $ref: '#/components/schemas/SummaryCountry'
+    SummaryCountry:
+      type: object
+      properties:
+        ID:
+          type: string
+          example: 66a10f13-854f-4755-9c67-9251dbc111f9
+        Country:
+          type: string
+          example: Afghanistan
+        CountryCod:
+          type: string
+          example: AF
+        Slug:
+          type: string
+          example: afghanistan
+        NewConfirmed:
+          type: number
+          example: 0
+        TotalConfirmed:
+          type: number
+          example: 165358
+        NewDeaths:
+          type: number
+          example: 0
+        TotalDeaths:
+          type: number
+          example: 7420
+        NewRecovered:
+          type: number
+          example: 0
+        TotalRecovered:
+          type: number
+          example: 0
+        Date:
+          type: string
+          format: date
+          example: 2022-02-05T19:21:18.595Z
+        Premium:
+          $ref: '#/components/schemas/Premium'
+    Premium:
+      type: object
+      properties:
+        CountryStats:
+          $ref: '#/components/schemas/CountryStats'
+    CountryStats:
+      type: object
+      properties:
+        ID:
+          type: string
+          example: '8d482aea-ccf0-4c2a-8704-43e483c407e9'
+        CountryISO:
+          type: string
+          example: 'AD'
+        Country:
+          type: string
+          example: 'Andorra'
+        Continent:
+          type: string
+          example: 'Asia'
+        Population:
+          type: number
+          example: 39835428
+        PopulationDensity:
+          type: number
+          format: double
+          example: 54.422
+        MedianAge:
+          type: number
+          format: double
+          example: 18.6
+        Aged65Older:
+          type: number
+          format: double
+          example: 2.581
+        Aged70Older:
+          type: number
+          example: 1.337
+        ExtremePoverty:
+          type: number
+          example: 0
+        GdpPerCapita:
+          type: number
+          format: double
+          example: 1803.987
+        CvdDeathRate:
+          type: number
+          example: 0
+        DiabetesPrevalence:
+          type: number
+          format: double
+          example: 9.59
+        HandwashingFacilities:
+          type: number
+          format: double
+          example: 37.746
+        HospitalBedsPerThousand:
+          type: number
+          format: double
+          example: 0.5
+        LifeExpectancy:
+          type: number
+          format: double
+          example: 64.83
+        FemaleSmokers:
+          type: number
+          example: 0
+        MaleSmokers:
+          type: number
+          example: 0
+
+
+
+
+
